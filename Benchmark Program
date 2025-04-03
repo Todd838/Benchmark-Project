@@ -1,0 +1,158 @@
+#include <iostream>
+#include <chrono>
+#include <vector>
+#include <fstream>
+#include <string>
+#include <map>
+
+// Function declarations
+double integer_benchmark();
+double float_benchmark();
+double memory_benchmark();
+double disk_benchmark_1();
+double disk_benchmark_2();
+
+int main() {
+    std::cout << "Starting benchmarks..." << std::endl;  // Initialize program and display start message
+    std::cout << "Benchmark results will be displayed here" << std::endl;
+
+    // Run all benchmarks
+    std::map<std::string, double> results;  // Create map to store benchmark results
+    results["Integer Operations"] = integer_benchmark();
+    results["Floating Point Operations"] = float_benchmark();
+    results["Memory Operations"] = memory_benchmark();
+    results["Disk Operations (100 bytes)"] = disk_benchmark_1();
+    results["Disk Operations (10000 bytes)"] = disk_benchmark_2();
+
+    // Print results
+    std::cout << "\nBenchmark Results:" << std::endl;  // Format and display all results
+    std::cout << "----------------------------------------" << std::endl;  // Print separator line
+    for (const auto& [benchmark, time_taken] : results) {  // Loop through results
+        std::cout << benchmark << ": " << std::fixed << std::setprecision(2) << time_taken << " seconds" << std::endl;  // Print formatted result
+    }
+
+    return 0;
+}
+
+double integer_benchmark() {
+    auto start_time = std::chrono::high_resolution_clock::now();  // Start timing and initialize operations
+    
+    int result = 0;  // Initialize counter for addition benchmark
+    for (int i = 0; i < 10000000000; i++) {  // 10^10 iterations
+        result += 1;
+    }
+    
+    result = 1;  // Initialize multiplier for multiplication benchmark
+    for (int i = 0; i < 5000000000; i++) {  // 5 × 10^9 iterations
+        result *= 2;
+    }
+    
+    result = 1 << 30;  // Initialize large number for division benchmark
+    for (int i = 0; i < 2000000000; i++) {  // 2 × 10^9 iterations
+        result /= 2;
+    }
+    
+    auto end_time = std::chrono::high_resolution_clock::now();  // End timing
+    return std::chrono::duration<double>(end_time - start_time).count();  // Return total execution time
+}
+
+double float_benchmark() {
+    auto start_time = std::chrono::high_resolution_clock::now();  // Start timing and initialize operations
+    
+    double result = 0.0;  // Initialize float counter for addition benchmark
+    for (int i = 0; i < 10000000000; i++) {  // 10^10 iterations
+        result += 1.0;
+    }
+    
+    result = 1.0;  // Initialize float multiplier for multiplication benchmark
+    for (int i = 0; i < 5000000000; i++) {  // 5 × 10^9 iterations
+        result *= 2.0;
+    }
+    
+    result = std::pow(2.0, 30);  // Initialize large float number for division benchmark
+    for (int i = 0; i < 2000000000; i++) {  // 2 × 10^9 iterations
+        result /= 2.0;
+    }
+    
+    auto end_time = std::chrono::high_resolution_clock::now();  // End timing
+    return std::chrono::duration<double>(end_time - start_time).count();  // Return total execution time
+}
+
+double memory_benchmark() {
+    auto start_time = std::chrono::high_resolution_clock::now();  // Start timing and initialize array operations
+    
+    const size_t size = 5000000000;  // Set array size to 5 billion elements
+    std::vector<int> arr(size, 0);  // Create zero-initialized array
+    int32_t* data = arr.data();  // Get raw pointer for faster access
+    
+    for (size_t i = 0; i < size; i++) {  // Loop through array for read operations
+        volatile int temp = data[i];  // Read each element (volatile to prevent optimization)
+    }
+    
+    for (size_t i = 0; i < size; i++) {  // Loop through array for write operations
+        data[i] = 1;  // Write value to each element
+    }
+    
+    auto end_time = std::chrono::high_resolution_clock::now();  // End timing
+    return std::chrono::duration<double>(end_time - start_time).count();  // Return total execution time
+}
+
+double disk_benchmark_1() {
+    auto start_time = std::chrono::high_resolution_clock::now();  // Start timing and initialize file operations
+    
+    // Create and write initial test file
+    std::ofstream outFile("test_file_1.bin", std::ios::binary);  // Open file for writing
+    std::vector<char> zeros(1000000000, '0');  // Create 1 billion zeros
+    outFile.write(zeros.data(), zeros.size());  // Write zeros to file
+    outFile.close();
+    
+    // Read operations
+    std::ifstream inFile("test_file_1.bin", std::ios::binary);  // Open file for reading
+    std::vector<char> buffer(100);  // Buffer for reading
+    while (inFile.read(buffer.data(), 100)) {  // Read 100 bytes at a time
+        // Do nothing with the data
+    }
+    inFile.close();
+    
+    // Write operations
+    outFile.open("test_file_1.bin", std::ios::binary);  // Open file for writing
+    std::vector<char> ones(100, '1');  // Create 100 ones
+    for (int i = 0; i < 10000000; i++) {  // Loop for writing operations
+        outFile.write(ones.data(), ones.size());  // Write 100 ones each time
+    }
+    outFile.close();
+    
+    std::remove("test_file_1.bin");  // Clean up test file
+    auto end_time = std::chrono::high_resolution_clock::now();  // End timing
+    return std::chrono::duration<double>(end_time - start_time).count();  // Return total execution time
+}
+
+double disk_benchmark_2() {
+    auto start_time = std::chrono::high_resolution_clock::now();  // Start timing and initialize file operations
+    
+    // Create and write initial test file
+    std::ofstream outFile("test_file_2.bin", std::ios::binary);  // Open file for writing
+    std::vector<char> zeros(1000000000, '0');  // Create 1 billion zeros
+    outFile.write(zeros.data(), zeros.size());  // Write zeros to file
+    outFile.close();
+    
+    // Read operations
+    std::ifstream inFile("test_file_2.bin", std::ios::binary);  // Open file for reading
+    std::vector<char> buffer(10000);  // Buffer for reading
+    while (inFile.read(buffer.data(), 10000)) {  // Read 10000 bytes at a time
+        // Do nothing with the data
+    }
+    inFile.close();
+    
+    // Write operations
+    outFile.open("test_file_2.bin", std::ios::binary);  // Open file for writing
+    std::vector<char> ones(10000, '1');  // Create 10000 ones
+    for (int i = 0; i < 100000; i++) {  // Loop for writing operations
+        outFile.write(ones.data(), ones.size());  // Write 10000 ones each time
+    }
+    outFile.close();
+    
+    std::remove("test_file_2.bin");  // Clean up test file
+    auto end_time = std::chrono::high_resolution_clock::now();  // End timing
+    return std::chrono::duration<double>(end_time - start_time).count();  // Return total execution time
+}
