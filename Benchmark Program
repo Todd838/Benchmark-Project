@@ -6,8 +6,9 @@
 #include <map>
 #include <iomanip>
 #include <cmath>
+#include <algorithm>
 
-// Function declarations
+// Function declarations for all benchmark operations
 double integer_benchmark();
 double float_benchmark();
 double memory_benchmark();
@@ -15,166 +16,218 @@ double disk_benchmark_1();
 double disk_benchmark_2();
 
 int main() {
-    std::cout << "Starting benchmarks..." << std::endl;    # Print program start message
-    std::cout << "Benchmark results will be displayed here" << std::endl;    # Display initial message
-    git commit -m "Added program initialization messages"
+    // Initialize program and display welcome messages
+    std::cout << "Starting benchmarks..." << std::endl;
+    std::cout << "Benchmark results will be displayed here" << std::endl;
+git commit -m "Added program initialization and welcome messages"
 
-    std::map<std::string, double> results;    # Create container for benchmark results
-    results["Integer Operations"] = integer_benchmark();    # Run integer benchmark
-    results["Floating Point Operations"] = float_benchmark();    # Run float benchmark
-    results["Memory Operations"] = memory_benchmark();    # Run memory benchmark
-    results["Disk Operations (100 bytes)"] = disk_benchmark_1();    # Run first disk benchmark
-    results["Disk Operations (10000 bytes)"] = disk_benchmark_2();    # Run second disk benchmark
-    git commit -m "Implemented benchmark execution and results collection"
+    // Create and populate results container with benchmark data
+    std::map<std::string, double> results;
+    results["Integer Operations"] = integer_benchmark();
+    results["Floating Point Operations"] = float_benchmark();
+    results["Memory Operations"] = memory_benchmark();
+    results["Disk Operations (100 bytes)"] = disk_benchmark_1();
+    results["Disk Operations (10000 bytes)"] = disk_benchmark_2();
+git commit -m "Implemented benchmark execution and results collection"
 
-    std::cout << "\nBenchmark Results:" << std::endl;    # Print results header
-    std::cout << "----------------------------------------" << std::endl;    # Print separator line
-    for (const auto& [benchmark, time_taken] : results) {    # Iterate through results
-        std::cout << benchmark << ": " << std::fixed << std::setprecision(2) << time_taken << " seconds" << std::endl;    # Print formatted result
+    // Format and display benchmark results
+    std::cout << "\nBenchmark Results:" << std::endl;
+    std::cout << "----------------------------------------" << std::endl;
+    for (const auto& [benchmark, time_taken] : results) {
+        std::cout << benchmark << ": " << std::fixed << std::setprecision(2) << time_taken << " seconds" << std::endl;
     }
-    git commit -m "Added results formatting and display"
+git commit -m "Added results formatting and display"
 
-    return 0;    # Exit program
+    return 0;
 }
 
 double integer_benchmark() {
-    auto start_time = std::chrono::high_resolution_clock::now();    # Start timing
-    git commit -m "Initialized timing for integer benchmark"
+    // Start timing the integer operations
+    auto start_time = std::chrono::high_resolution_clock::now();
+git commit -m "Initialized timing for integer benchmark"
 
-    int result = 0;    # Initialize result variable
-    for (int i = 0; i < 10000000000; i++) {    # Loop for addition operations
-        result += 1;    # Perform addition
+    // Perform addition operations (10^10 additions)
+    int result = 0;
+    const int chunk_size = 1000000;  // Process in chunks of 1 million
+    for (int chunk = 0; chunk < 10000; chunk++) {  // 10000 chunks × 1 million = 10^10
+        for (int i = 0; i < chunk_size; i++) {
+            result += 1;
+        }
     }
-    git commit -m "Implemented integer addition benchmark"
+git commit -m "Implemented integer addition benchmark with chunking"
 
-    result = 1;    # Reset result for multiplication
-    for (int i = 0; i < 5000000000; i++) {    # Loop for multiplication operations
-        result *= 2;    # Perform multiplication
+    // Perform multiplication operations (5 × 10^9 multiplications)
+    result = 1;
+    for (int chunk = 0; chunk < 5000; chunk++) {  // 5000 chunks × 1 million = 5 × 10^9
+        for (int i = 0; i < chunk_size; i++) {
+            result *= 2;
+        }
     }
-    git commit -m "Implemented integer multiplication benchmark"
+git commit -m "Implemented integer multiplication benchmark with chunking"
 
-    result = 1 << 30;    # Set initial value for division
-    for (int i = 0; i < 2000000000; i++) {    # Loop for division operations
-        result /= 2;    # Perform division
+    // Perform division operations (2 × 10^9 divisions)
+    result = 1 << 30;
+    for (int chunk = 0; chunk < 2000; chunk++) {  // 2000 chunks × 1 million = 2 × 10^9
+        for (int i = 0; i < chunk_size; i++) {
+            result /= 2;
+        }
     }
-    git commit -m "Implemented integer division benchmark"
+git commit -m "Implemented integer division benchmark with chunking"
 
-    auto end_time = std::chrono::high_resolution_clock::now();    # End timing
-    return std::chrono::duration<double>(end_time - start_time).count();    # Return execution time
-    git commit -m "Completed integer benchmark timing"
+    // Calculate and return execution time
+    auto end_time = std::chrono::high_resolution_clock::now();
+    return std::chrono::duration<double>(end_time - start_time).count();
+git commit -m "Completed integer benchmark timing calculation"
 }
 
 double float_benchmark() {
-    auto start_time = std::chrono::high_resolution_clock::now();    # Start timing
-    git commit -m "Initialized timing for float benchmark"
+    // Start timing the floating-point operations
+    auto start_time = std::chrono::high_resolution_clock::now();
+git commit -m "Initialized timing for float benchmark"
 
-    double result = 0.0;    # Initialize float result
-    for (int i = 0; i < 10000000000; i++) {    # Loop for addition operations
-        result += 1.0;    # Perform float addition
+    // Perform addition operations (10^10 additions)
+    double result = 0.0;
+    const int chunk_size = 1000000;  // Process in chunks of 1 million
+    for (int chunk = 0; chunk < 10000; chunk++) {  // 10000 chunks × 1 million = 10^10
+        for (int i = 0; i < chunk_size; i++) {
+            result += 1.0;
+        }
     }
-    git commit -m "Implemented float addition benchmark"
+git commit -m "Implemented float addition benchmark with chunking"
 
-    result = 1.0;    # Reset result for multiplication
-    for (int i = 0; i < 5000000000; i++) {    # Loop for multiplication operations
-        result *= 2.0;    # Perform float multiplication
+    // Perform multiplication operations (5 × 10^9 multiplications)
+    result = 1.0;
+    for (int chunk = 0; chunk < 5000; chunk++) {  // 5000 chunks × 1 million = 5 × 10^9
+        for (int i = 0; i < chunk_size; i++) {
+            result *= 2.0;
+        }
     }
-    git commit -m "Implemented float multiplication benchmark"
+git commit -m "Implemented float multiplication benchmark with chunking"
 
-    result = std::pow(2.0, 30);    # Set initial value for division
-    for (int i = 0; i < 2000000000; i++) {    # Loop for division operations
-        result /= 2.0;    # Perform float division
+    // Perform division operations (2 × 10^9 divisions)
+    result = std::pow(2.0, 30);
+    for (int chunk = 0; chunk < 2000; chunk++) {  // 2000 chunks × 1 million = 2 × 10^9
+        for (int i = 0; i < chunk_size; i++) {
+            result /= 2.0;
+        }
     }
-    git commit -m "Implemented float division benchmark"
+git commit -m "Implemented float division benchmark with chunking"
 
-    auto end_time = std::chrono::high_resolution_clock::now();    # End timing
-    return std::chrono::duration<double>(end_time - start_time).count();    # Return execution time
-    git commit -m "Completed float benchmark timing"
+    // Calculate and return execution time
+    auto end_time = std::chrono::high_resolution_clock::now();
+    return std::chrono::duration<double>(end_time - start_time).count();
+git commit -m "Completed float benchmark timing calculation"
 }
 
 double memory_benchmark() {
-    auto start_time = std::chrono::high_resolution_clock::now();    # Start timing
-    git commit -m "Initialized timing for memory benchmark"
+    // Start timing the memory operations
+    auto start_time = std::chrono::high_resolution_clock::now();
+git commit -m "Initialized timing for memory benchmark"
 
-    const size_t size = 5000000000;    # Set array size
-    std::vector<int> arr(size, 0);    # Create zero-initialized array
-    int32_t* data = arr.data();    # Get raw pointer for faster access
-    git commit -m "Set up memory array and pointer"
+    // Initialize array and get pointer for faster access
+    const size_t chunk_size = 1000000;  // Process in chunks of 1 million
+    const size_t total_size = 5000000000;  // 5 × 10^9 elements
+    std::vector<int> arr(chunk_size, 0);
+    int32_t* data = arr.data();
+git commit -m "Set up memory array and pointer for benchmark"
 
-    for (size_t i = 0; i < size; i++) {    # Loop for read operations
-        volatile int temp = data[i];    # Read array element
+    // Perform read and write operations in chunks
+    for (size_t chunk = 0; chunk < total_size / chunk_size; chunk++) {
+        // Read operations
+        for (size_t i = 0; i < chunk_size; i++) {
+            volatile int temp = data[i];
+        }
+git commit -m "Implemented memory read operations in chunks"
+
+        // Write operations
+        for (size_t i = 0; i < chunk_size; i++) {
+            data[i] = 1;
+        }
     }
-    git commit -m "Implemented array read operations"
+git commit -m "Implemented memory write operations in chunks"
 
-    for (size_t i = 0; i < size; i++) {    # Loop for write operations
-        data[i] = 1;    # Write to array element
-    }
-    git commit -m "Implemented array write operations"
-
-    auto end_time = std::chrono::high_resolution_clock::now();    # End timing
-    return std::chrono::duration<double>(end_time - start_time).count();    # Return execution time
-    git commit -m "Completed memory benchmark timing"
+    // Calculate and return execution time
+    auto end_time = std::chrono::high_resolution_clock::now();
+    return std::chrono::duration<double>(end_time - start_time).count();
+git commit -m "Completed memory benchmark timing calculation"
 }
 
 double disk_benchmark_1() {
-    auto start_time = std::chrono::high_resolution_clock::now();    # Start timing
-    git commit -m "Initialized timing for first disk benchmark"
+    // Start timing the disk operations
+    auto start_time = std::chrono::high_resolution_clock::now();
+git commit -m "Initialized timing for first disk benchmark"
 
-    std::ofstream outFile("test_file_1.bin", std::ios::binary);    # Open file for writing
-    std::vector<char> zeros(1000000000, '0');    # Create buffer of zeros
-    outFile.write(zeros.data(), zeros.size());    # Write zeros to file
-    outFile.close();    # Close file
-    git commit -m "Created initial test file with zeros"
-
-    std::ifstream inFile("test_file_1.bin", std::ios::binary);    # Open file for reading
-    std::vector<char> buffer(100);    # Create read buffer
-    while (inFile.read(buffer.data(), 100)) {    # Read 100 bytes at a time
-        // Do nothing with the data    # Skip data processing
+    // Create and write initial test file (10^9 bytes) in chunks
+    std::ofstream outFile("test_file_1.bin", std::ios::binary);
+    const size_t chunk_size = 1000000;  // 1MB chunks
+    std::vector<char> zeros(chunk_size, '0');
+    for (int i = 0; i < 1000; i++) {  // 1000 chunks × 1MB = 1GB
+        outFile.write(zeros.data(), zeros.size());
     }
-    inFile.close();    # Close file
-    git commit -m "Implemented file read operations"
+    outFile.close();
+git commit -m "Created initial test file with zeros in chunks"
 
-    outFile.open("test_file_1.bin", std::ios::binary);    # Reopen file for writing
-    std::vector<char> ones(100, '1');    # Create buffer of ones
-    for (int i = 0; i < 10000000; i++) {    # Loop for write operations
-        outFile.write(ones.data(), ones.size());    # Write ones to file
+    // Perform read operations (100 bytes at a time)
+    std::ifstream inFile("test_file_1.bin", std::ios::binary);
+    std::vector<char> buffer(100);
+    while (inFile.read(buffer.data(), 100)) {
+        // Skip data processing
     }
-    outFile.close();    # Close file
-    git commit -m "Implemented file write operations"
+    inFile.close();
+git commit -m "Implemented file read operations in 100-byte chunks"
 
-    std::remove("test_file_1.bin");    # Delete test file
-    auto end_time = std::chrono::high_resolution_clock::now();    # End timing
-    return std::chrono::duration<double>(end_time - start_time).count();    # Return execution time
-    git commit -m "Completed first disk benchmark timing"
+    // Perform write operations (100 bytes at a time)
+    outFile.open("test_file_1.bin", std::ios::binary);
+    std::vector<char> ones(100, '1');
+    for (int i = 0; i < 10000000; i++) {  // 10^9 bytes total
+        outFile.write(ones.data(), ones.size());
+    }
+    outFile.close();
+git commit -m "Implemented file write operations in 100-byte chunks"
+
+    // Clean up and calculate execution time
+    std::remove("test_file_1.bin");
+    auto end_time = std::chrono::high_resolution_clock::now();
+    return std::chrono::duration<double>(end_time - start_time).count();
+git commit -m "Completed first disk benchmark timing calculation"
 }
 
 double disk_benchmark_2() {
-    auto start_time = std::chrono::high_resolution_clock::now();    # Start timing
-    git commit -m "Initialized timing for second disk benchmark"
+    // Start timing the disk operations
+    auto start_time = std::chrono::high_resolution_clock::now();
+git commit -m "Initialized timing for second disk benchmark"
 
-    std::ofstream outFile("test_file_2.bin", std::ios::binary);    # Open file for writing
-    std::vector<char> zeros(1000000000, '0');    # Create buffer of zeros
-    outFile.write(zeros.data(), zeros.size());    # Write zeros to file
-    outFile.close();    # Close file
-    git commit -m "Created initial test file with zeros"
-
-    std::ifstream inFile("test_file_2.bin", std::ios::binary);    # Open file for reading
-    std::vector<char> buffer(10000);    # Create read buffer
-    while (inFile.read(buffer.data(), 10000)) {    # Read 10000 bytes at a time
-        // Do nothing with the data    # Skip data processing
+    // Create and write initial test file (10^9 bytes) in chunks
+    std::ofstream outFile("test_file_2.bin", std::ios::binary);
+    const size_t chunk_size = 1000000;  // 1MB chunks
+    std::vector<char> zeros(chunk_size, '0');
+    for (int i = 0; i < 1000; i++) {  // 1000 chunks × 1MB = 1GB
+        outFile.write(zeros.data(), zeros.size());
     }
-    inFile.close();    # Close file
-    git commit -m "Implemented file read operations"
+    outFile.close();
+git commit -m "Created initial test file with zeros in chunks"
 
-    outFile.open("test_file_2.bin", std::ios::binary);    # Reopen file for writing
-    std::vector<char> ones(10000, '1');    # Create buffer of ones
-    for (int i = 0; i < 100000; i++) {    # Loop for write operations
-        outFile.write(ones.data(), ones.size());    # Write ones to file
+    // Perform read operations (10000 bytes at a time)
+    std::ifstream inFile("test_file_2.bin", std::ios::binary);
+    std::vector<char> buffer(10000);
+    while (inFile.read(buffer.data(), 10000)) {
+        // Skip data processing
     }
-    outFile.close();    # Close file
-    git commit -m "Implemented file write operations"
+    inFile.close();
+git commit -m "Implemented file read operations in 10000-byte chunks"
 
-    std::remove("test_file_2.bin");    # Delete test file
-    auto end_time = std::chrono::high_resolution_clock::now();    # End timing
-    return std::chrono::duration<double>(end_time - start_time).count();    # Return execution time
-    git commit -m "Completed second disk benchmark timing"
+    // Perform write operations (10000 bytes at a time)
+    outFile.open("test_file_2.bin", std::ios::binary);
+    std::vector<char> ones(10000, '1');
+    for (int i = 0; i < 100000; i++) {  // 10^9 bytes total
+        outFile.write(ones.data(), ones.size());
+    }
+    outFile.close();
+git commit -m "Implemented file write operations in 10000-byte chunks"
+
+    // Clean up and calculate execution time
+    std::remove("test_file_2.bin");
+    auto end_time = std::chrono::high_resolution_clock::now();
+    return std::chrono::duration<double>(end_time - start_time).count();
+    // git commit -m "Completed second disk benchmark timing calculation"
 }
